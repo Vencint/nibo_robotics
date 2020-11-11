@@ -18,6 +18,11 @@
 #include <nibo/iodefs.h>
 #include <nibo/leds.h>
 
+#include "jan.c"
+#include "vincent.c"
+#include "patrick.c"
+
+
 
 /**
  * Threshold for obstacles considered to be near a distance sensor.
@@ -33,6 +38,8 @@ enum state {
     OBSTACLE_AHEAD,
     OBSTACLE_LEFT,
     OBSTACLE_RIGHT,
+    OBSTACLE_LEFT_AHEAD,
+    OBSTACLE_RIGHT_AHEAD,
     FREE
 };
 
@@ -73,10 +80,8 @@ void start_nibo();
 /**
  * Main function to run endless while-loop in.
  */
-
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
-
+#pragma ide diagnostic ignored "EndlessLoop"
 int main() {
     init();
 
@@ -88,10 +93,14 @@ int main() {
 
         switch (get_current_state()) {
             case DEAD_END:
+                // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
             case ALLEY:
+                // Justieren und geradeaus fahren
             case OBSTACLE_AHEAD:
-            case OBSTACLE_LEFT:
-            case OBSTACLE_RIGHT:
+                // Sensor, der besten Wert liefert finden und in diese Richtung fahren
+            case OBSTACLE_LEFT_AHEAD:
+                // Darauf achten, dass er nicht näher kommt
+            case OBSTACLE_RIGHT_AHEAD:
                 copro_stop();
                 break;
             default:
@@ -104,18 +113,19 @@ int main() {
     }
     return 0;
 }
+#pragma clang diagnostic pop
 
 /**
  * Function waiting for the user to start the nibo.
  */
 void start_nibo() {
-    gfx_move(70, 0);
+    gfx_move(0, 0);
     gfx_set_proportional(1);
     gfx_print_text("Press S3 to start!");
 
     while (get_input_bit(IO_INPUT_1));
 
-    gfx_move(70, 0);
+    gfx_move(0, 0);
     gfx_set_proportional(1);
     gfx_print_text("Start nibo...");
 }
@@ -127,7 +137,7 @@ void init() {
     sei();
     bot_init();
     spi_init();
-    display_init(NIBO_DISPLAY_TYPE);
+    display_init(DISPLAY_TYPE_TXT);
     gfx_init();
 
     copro_ir_startMeasure();
@@ -158,10 +168,10 @@ enum state get_current_state() {
         return ALLEY;
     } else if (is_near(DS_FRONT, NEAR)) {
         return OBSTACLE_AHEAD;
-    } else if (is_near(DS_LEFT, NEAR)) {
-        return OBSTACLE_LEFT;
-    } else if (is_near(DS_RIGHT, NEAR)) {
-        return OBSTACLE_RIGHT;
+    } else if (is_near(DS_FRONT_LEFT, NEAR)) {
+        return OBSTACLE_LEFT_AHEAD;
+    } else if (is_near(DS_FRONT_RIGHT, NEAR)) {
+        return OBSTACLE_RIGHT_AHEAD;
     } else {
         return FREE;
     }
