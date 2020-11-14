@@ -52,5 +52,5 @@ void obstacle_right(){
 void obstacle_ahead(){
     copro_setSpeed(-20,20);
     delay(500);
-    copro_setSpeed(20,20)
+    copro_setSpeed(20,20);
 }

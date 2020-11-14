@@ -22,57 +22,12 @@
 #include "vincent.c"
 #include "patrick.c"
 
+#include "utils.h"
 
-
-/**
- * Threshold for obstacles considered to be near a distance sensor.
- */
-#define NEAR        (uint16_t) 0x00a0
-
-/**
- * Enum for nibo's current state.
- */
-enum state {
-    ALLEY,
-    DEAD_END,
-    OBSTACLE_AHEAD,
-    OBSTACLE_LEFT,
-    OBSTACLE_RIGHT,
-    OBSTACLE_LEFT_AHEAD,
-    OBSTACLE_RIGHT_AHEAD,
-    FREE
-};
-
-/**
- * Enum for the position of distance sensors.
- */
-enum distance_sensors {
-    DS_LEFT = 4,
-    DS_FRONT_LEFT = 3,
-    DS_FRONT = 2,
-    DS_FRONT_RIGHT = 1,
-    DS_RIGHT = 0
-};
-
-/**
- * Enum for the position of LEDs.
- */
-enum leds {
-    LEDS_LEFT = 2,
-    LEDS_FRONT_LEFT = 3,
-    LEDS_FRONT_FRONT_LEFT = 4,
-    LEDS_FRONT_FRONT_RIGHT = 5,
-    LEDS_FRONT_RIGHT = 6,
-    LEDS_RIGHT = 7
-};
 
 void init();
 
 uint8_t request_distance_data();
-
-enum state get_current_state();
-
-bool is_near(enum distance_sensors sensor, uint16_t threshold);
 
 void start_nibo();
 
@@ -163,34 +118,4 @@ uint8_t request_distance_data() {
         gfx_print_text("can't update distance sensor data");
     }
     return update;
-}
-
-/**
- * Function to get nibo's current state.
- * @return nibo's current state
- */
-enum state get_current_state() {
-    if (is_near(DS_LEFT, NEAR) and is_near(DS_RIGHT, NEAR) and is_near(DS_FRONT, NEAR)) {
-        return DEAD_END;
-    } else if (is_near(DS_LEFT, NEAR) and is_near(DS_RIGHT, NEAR)) {
-        return ALLEY;
-    } else if (is_near(DS_FRONT, NEAR)) {
-        return OBSTACLE_AHEAD;
-    } else if (is_near(DS_FRONT_LEFT, NEAR)) {
-        return OBSTACLE_LEFT_AHEAD;
-    } else if (is_near(DS_FRONT_RIGHT, NEAR)) {
-        return OBSTACLE_RIGHT_AHEAD;
-    } else {
-        return FREE;
-    }
-}
-
-/**
- * Function to find out if a distance sensor detected a nearby obstacle.
- * @param sensor the sensor to get distance from
- * @param threshold the threshold for when an obstacle is considered "near"
- * @return true if there is an obstacle nearby, false otherwise
- */
-bool is_near(enum distance_sensors sensor, uint16_t threshold) {
-    return copro_distance[sensor] / 128 > threshold;
 }
