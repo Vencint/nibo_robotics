@@ -80,8 +80,11 @@ void start_nibo();
 /**
  * Main function to run endless while-loop in.
  */
+
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 #pragma ide diagnostic ignored "EndlessLoop"
+
 int main() {
     init();
 
@@ -93,6 +96,7 @@ int main() {
 
         switch (get_current_state()) {
             case DEAD_END:
+                leave_dead_end();
                 // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
             case ALLEY:
                 // Justieren und geradeaus fahren
@@ -109,7 +113,7 @@ int main() {
                 break;
         }
 
-        delay(50);
+        delay(500);
     }
     return 0;
 }
@@ -127,6 +131,8 @@ void start_nibo() {
 
     gfx_move(0, 0);
     gfx_set_proportional(1);
+    /* TODO: Display has to be cleared before changing its message to the following (because there's text from the
+             previous message shown on the display after changing to the following one) */
     gfx_print_text("Start nibo...");
 }
 
@@ -152,7 +158,9 @@ uint8_t request_distance_data() {
     if (!update) {
         gfx_move(10, 10);
         gfx_set_proportional(1);
-        gfx_print_text("COPRO Error   ");
+        gfx_print_text("COPRO Error:");
+        gfx_move(0, 10);
+        gfx_print_text("can't update distance sensor data");
     }
     return update;
 }
