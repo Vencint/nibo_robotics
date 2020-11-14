@@ -96,6 +96,8 @@ int main() {
                 // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
             case ALLEY:
                 // Justieren und geradeaus fahren
+                drive_in_alley();
+                break;
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
             case OBSTACLE_LEFT_AHEAD:
@@ -105,7 +107,7 @@ int main() {
                 break;
             default:
                 // default = nibo is free
-                copro_setSpeed(20, 20);
+                copro_stop();
                 break;
         }
 
