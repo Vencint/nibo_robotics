@@ -53,8 +53,8 @@ enum leds {
     LEDS_RIGHT = 7
 };
 
-enum state get_current_state();
+//enum state get_current_state();
 
-bool is_near(enum distance_sensors sensor, uint16_t threshold);
+//bool is_near(enum distance_sensors sensor, uint16_t threshold);
 
 #endif //NIBO_UTILS_H

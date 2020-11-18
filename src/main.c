@@ -32,6 +32,31 @@ void start_nibo();
 
 int leave_dead_end();
 
+/**
+ * Function to find out if a distance sensor detected a nearby obstacle.
+ * @param sensor the sensor to get distance from
+ * @param threshold the threshold for when an obstacle is considered "near"
+ * @return true if there is an obstacle nearby, false otherwise
+ */
+bool is_near(enum distance_sensors sensor, uint16_t threshold) {
+    return copro_distance[sensor] / 128 > threshold;
+}
+
+enum state get_current_state() {
+    if (is_near(DS_LEFT, NEAR) and is_near(DS_RIGHT, NEAR) and is_near(DS_FRONT, NEAR)) {
+        return DEAD_END;
+    } else if (is_near(DS_LEFT, NEAR) and is_near(DS_RIGHT, NEAR)) {
+        return ALLEY;
+    } else if (is_near(DS_FRONT, NEAR)) {
+        return OBSTACLE_AHEAD;
+    } else if (is_near(DS_FRONT_LEFT, NEAR)) {
+        return OBSTACLE_LEFT_AHEAD;
+    } else if (is_near(DS_FRONT_RIGHT, NEAR)) {
+        return OBSTACLE_RIGHT_AHEAD;
+    } else {
+        return FREE;
+    }
+}
 
 /**
  * Main function to run endless while-loop in.

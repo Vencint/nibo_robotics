@@ -6,7 +6,7 @@
  * This includes the handling of the nibo when it detects a dead end.
  */
 
-#include "utils.h"
+#include <utils.h>
 
 /**
  * This method tries to manoeuvre the nibo out of a dead end.
