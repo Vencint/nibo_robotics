@@ -20,7 +20,7 @@
 
 #include "jan.c"
 #include "vincent.c"
-#include "patrick.c"
+
 
 
 
@@ -76,6 +76,12 @@ bool is_near(enum distance_sensors sensor, uint16_t threshold);
 
 void start_nibo();
 
+void obstacle_left();
+
+void obstacle_right();
+
+void obstacle_ahead();
+
 
 /**
  * Main function to run endless while-loop in.
@@ -96,16 +102,24 @@ int main() {
 
         switch (get_current_state()) {
             case DEAD_END:
-                leave_dead_end();
+                // leave_dead_end();
+                copro_stop();
+                break;
                 // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
             case ALLEY:
+                copro_stop();
+                break;
                 // Justieren und geradeaus fahren
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
+                obstacle_ahead();
+                break;
             case OBSTACLE_LEFT_AHEAD:
                 // Darauf achten, dass er nicht näher kommt
+                obstacle_left();
+                break;
             case OBSTACLE_RIGHT_AHEAD:
-                copro_stop();
+                obstacle_right();
                 break;
             default:
                 // default = nibo is free
@@ -193,4 +207,22 @@ enum state get_current_state() {
  */
 bool is_near(enum distance_sensors sensor, uint16_t threshold) {
     return copro_distance[sensor] / 128 > threshold;
+}
+
+void obstacle_left(){
+    copro_setSpeed(20,10);
+    delay(300);
+    copro_setSpeed(20,20);
+}
+
+void obstacle_right(){
+    copro_setSpeed(10,20);
+    delay(300);
+    copro_setSpeed(20,20);
+}
+
+void obstacle_ahead(){
+    copro_setSpeed(-20,20);
+    delay(500);
+    copro_setSpeed(20,20);
 }
