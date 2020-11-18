@@ -181,12 +181,12 @@ int leave_dead_end() {
         // Check for obstacles on the right and left hand side of the nibo
         if (ds_current[DS_LEFT] < 50 and ds_current[DS_FRONT_LEFT] < 50) {
             // there's no obstacle to the left of the nibo, steer left and leave this function
-            copro_setSpeed(-10, 20);
+            copro_setSpeed(-10, 10);
             delay(500);
             break;
         } else if (ds_current[DS_RIGHT] < 50 and ds_current[DS_FRONT_RIGHT] < 50) {
             // there's no obstacle to the right of the nibo, steer right and leave this function
-            copro_setSpeed(20, -10);
+            copro_setSpeed(10, -10);
             delay(500);
             break;
         }
