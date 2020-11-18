@@ -192,11 +192,11 @@ int leave_dead_end() {
         }
 
         // compare current distance sensor values to the values of the previous loop
-        if (ds_current[DS_LEFT] < ds_previous[DS_LEFT] && ds_current[DS_RIGHT] > ds_previous[DS_RIGHT]) {
+        if (ds_current[DS_LEFT] > ds_previous[DS_LEFT]) {
             // Nibo is reversing to the left, steer a little to the right
             speed_left_wheel = -10;
             speed_right_wheel = -8;
-        } else if (ds_current[DS_RIGHT] < ds_previous[DS_RIGHT] && ds_current[DS_LEFT] > ds_previous[DS_LEFT]) {
+        } else if (ds_current[DS_RIGHT] > ds_previous[DS_RIGHT]) {
             // Nibo is reversing to the right, steer a little to the left
             speed_left_wheel = -8;
             speed_right_wheel = -10;
