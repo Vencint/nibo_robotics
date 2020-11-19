@@ -69,6 +69,10 @@ enum state get_current_state() {
 int main() {
     init();
 
+    // TODO: WARUM FUNKTIONIERT DAS NICHTẞ1
+    leds_set_status(4, 1);
+    leds_set_status(5, 1);
+
     start_nibo();
 
     while (true) {
@@ -82,19 +86,31 @@ int main() {
                 break;
             case ALLEY:
                 // Justieren und geradeaus fahren
+
+                // TODO: Vor merge mit allen anderen entfernen!
+                copro_stop();
                 break;
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
+
+                // TODO: Vor merge mit allen anderen entfernen!
+                copro_stop();
                 break;
             case OBSTACLE_LEFT_AHEAD:
                 // Darauf achten, dass er nicht näher kommt
+
+                // TODO: Vor merge mit allen anderen entfernen!
+                copro_stop();
                 break;
             case OBSTACLE_RIGHT_AHEAD:
+                // Darauf achten, dass er nicht näher kommt
+
+                // TODO: Vor merge mit allen anderen entfernen!
                 copro_stop();
                 break;
             default:
                 // default = nibo is free
-                copro_setSpeed(20, 20);
+                copro_setSpeed(5, 5);
                 break;
         }
 
@@ -102,6 +118,7 @@ int main() {
     }
     return 0;
 }
+
 #pragma clang diagnostic pop
 
 /**
@@ -116,8 +133,10 @@ void start_nibo() {
 
     gfx_move(0, 0);
     gfx_set_proportional(1);
-    /* TODO: Display has to be cleared before changing its message to the following (because there's text from the
-             previous message shown on the display after changing to the following one) */
+
+    // Clear text currently shown on the display
+    gfx_fill(0);
+
     gfx_print_text("Start nibo...");
 }
 
@@ -127,6 +146,7 @@ void start_nibo() {
 void init() {
     sei();
     bot_init();
+    leds_init();
     spi_init();
     display_init(DISPLAY_TYPE_TXT);
     gfx_init();
@@ -151,6 +171,31 @@ uint8_t request_distance_data() {
 }
 
 /**
+ *
+ * @param ds_current current distance sensor value
+ * @param ds_previous distance sensor value of the previous loop
+ * @return the speed of the wheel
+ */
+uint16_t determine_steering(const uint16_t ds_current, const uint16_t ds_previous) {
+    uint16_t difference = 0;
+
+    // determine how much steering is necessary
+    difference = ds_current - ds_previous;
+    if (difference < 5) {
+        return -9;
+    } else if (difference < 10) {
+        return -8;
+    } else if (difference < 15) {
+        return -7;
+    } else if (difference < 20) {
+        return -6;
+    } else {
+        return -5;
+    }
+}
+
+
+/**
  * This method tries to manoeuvre the nibo out of a dead end.
  * @return 1 if the nibo managed to leave the dead end, 0 if the nibo is still in the dead end (so far)
  */
@@ -161,6 +206,8 @@ int leave_dead_end() {
     int16_t speed_left_wheel = -10;
     int16_t speed_right_wheel = -10;
 
+    uint16_t difference = 0;
+
     // assign current distance values to the array of "previous" distance values for now
     for (int i = 0; i < 5; ++i) {
         ds_previous[i] = copro_distance[i] / 256;
@@ -168,7 +215,7 @@ int leave_dead_end() {
 
     // start reversing
     copro_setSpeed(speed_left_wheel, speed_right_wheel);
-    delay(500);
+    delay(300);
 
     // Enter loop for manoeuvring out of the dead end
     while (true) {
@@ -178,7 +225,7 @@ int leave_dead_end() {
             ds_current[i] = copro_distance[i] / 256;
         }
 
-        // Check for obstacles on the right and left hand side of the nibo
+        // Check for obstacles on the left and right hand side of the nibo
         if (ds_current[DS_LEFT] < 50 and ds_current[DS_FRONT_LEFT] < 50) {
             // there's no obstacle to the left of the nibo, steer left and leave this function
             copro_setSpeed(-10, 10);
@@ -193,13 +240,55 @@ int leave_dead_end() {
 
         // compare current distance sensor values to the values of the previous loop
         if (ds_current[DS_LEFT] > ds_previous[DS_LEFT]) {
-            // Nibo is reversing to the left, steer a little to the right
-            speed_left_wheel = -10;
-            speed_right_wheel = -8;
+            // Nibo is reversing to the left, steer to the right
+            difference = ds_current - ds_previous;
+            if (difference < 5) {
+                speed_right_wheel = -9;
+            } else if (difference < 10) {
+                speed_right_wheel = -8;
+            } else if (difference < 15) {
+                speed_right_wheel = -7;
+            } else if (difference < 20) {
+                speed_right_wheel = -6;
+            } else {
+                speed_right_wheel = -5;
+            }
+
+            // speed_right_wheel = determine_steering(ds_current[DS_LEFT], ds_previous[DS_LEFT]);
+
+            /* if the front-left side of the nibo is very close to an object, turn with lesser radius by reversing with
+             * the left wheel quicker */
+            if (ds_current[DS_RIGHT] > 230) {
+                speed_left_wheel = -12;
+            } else {
+                speed_left_wheel = -10;
+            }
         } else if (ds_current[DS_RIGHT] > ds_previous[DS_RIGHT]) {
-            // Nibo is reversing to the right, steer a little to the left
-            speed_left_wheel = -8;
-            speed_right_wheel = -10;
+            // Nibo is reversing to the right, steer to the left
+
+
+            difference = ds_current - ds_previous;
+            if (difference < 5) {
+                speed_left_wheel = -9;
+            } else if (difference < 10) {
+                speed_left_wheel = -8;
+            } else if (difference < 15) {
+                speed_left_wheel = -7;
+            } else if (difference < 20) {
+                speed_left_wheel = -6;
+            } else {
+                speed_left_wheel = -5;
+            }
+
+            //speed_left_wheel = determine_steering(ds_current[DS_RIGHT], ds_previous[DS_RIGHT]);
+
+            /* if the front-right side of the nibo is very close to an object, turn with lesser radius by reversing with
+             * the right wheel quicker */
+            if (ds_current[DS_RIGHT] > 230) {
+                speed_right_wheel = -12;
+            } else {
+                speed_right_wheel = -10;
+            }
         } else {
             // Try to reverse in a straight line
             speed_left_wheel = -10;
@@ -214,7 +303,8 @@ int leave_dead_end() {
 
         // finally set the speed and have a delay to not overwhelm the motor with commands
         copro_setSpeed(speed_left_wheel, speed_right_wheel);
-        delay(500);
+        delay(300);
     }
+
     return 0;
 }
