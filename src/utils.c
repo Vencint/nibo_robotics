@@ -5,6 +5,14 @@
  * @brief explain stuff here
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <iso646.h>
+#include <nibo/niboconfig.h>
+#include <nibo/delay.h>
+#include <nibo/bot.h>
+#include <nibo/copro.h>
+
 #include "utils.h"
 
 /**

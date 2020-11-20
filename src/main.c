@@ -18,10 +18,7 @@
 #include <nibo/iodefs.h>
 #include <nibo/leds.h>
 
-#include "jan.c"
-#include "vincent.c"
-#include "patrick.c"
-
+#include "jan.h"
 #include "utils.h"
 
 

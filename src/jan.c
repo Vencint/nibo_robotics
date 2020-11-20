@@ -6,6 +6,16 @@
  * This includes the handling of the nibo when it detects a dead end.
  */
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <iso646.h>
+#include <nibo/niboconfig.h>
+#include <nibo/delay.h>
+#include <nibo/display.h>
+#include <nibo/bot.h>
+#include <nibo/copro.h>
+
+#include "jan.h"
 
 const uint16_t D_S_LEFT = 4;
 const uint16_t D_S_FRONT_LEFT = 3;
