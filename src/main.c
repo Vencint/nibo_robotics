@@ -110,7 +110,9 @@ int main() {
                 break;
             default:
                 // default = nibo is free
-                copro_setSpeed(5, 5);
+                // TODO: Vor merge mit allen anderen entfernen!
+                copro_stop();
+                // copro_setSpeed(5, 5);
                 break;
         }
 
@@ -242,16 +244,21 @@ int leave_dead_end() {
         if (ds_current[DS_LEFT] > ds_previous[DS_LEFT]) {
             // Nibo is reversing to the left, steer to the right
             difference = ds_current - ds_previous;
-            if (difference < 5) {
-                speed_right_wheel = -9;
-            } else if (difference < 10) {
-                speed_right_wheel = -8;
-            } else if (difference < 15) {
-                speed_right_wheel = -7;
-            } else if (difference < 20) {
-                speed_right_wheel = -6;
+            if (difference > 2) {
+                if (difference < 5) {
+                    speed_right_wheel = -9;
+                } else if (difference < 10) {
+                    speed_right_wheel = -8;
+                } else if (difference < 15) {
+                    speed_right_wheel = -7;
+                } else if (difference < 20) {
+                    speed_right_wheel = -6;
+                } else {
+                    speed_right_wheel = -5;
+                }
             } else {
-                speed_right_wheel = -5;
+                speed_right_wheel = -10;
+                speed_left_wheel = -10;
             }
 
             // speed_right_wheel = determine_steering(ds_current[DS_LEFT], ds_previous[DS_LEFT]);
