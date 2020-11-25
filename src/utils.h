@@ -7,6 +7,7 @@
 #define NIBO_UTILS_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 /**
  * Threshold for obstacles considered to be near a distance sensor.
