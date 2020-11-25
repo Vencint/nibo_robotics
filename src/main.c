@@ -19,6 +19,7 @@
 #include <nibo/leds.h>
 
 #include "jan.h"
+#include "patrick.h"
 #include "utils.h"
 
 
