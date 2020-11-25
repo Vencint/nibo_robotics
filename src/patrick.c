@@ -36,21 +36,25 @@
 // Ein- und Ausgabefunktionen
 #include <stdio.h>
 
+#include "utils.h"
+
 
 void obstacle_left(){
-    copro_setSpeed(20,10);
-    delay(300);
-    copro_setSpeed(20,20);
+    copro_setSpeed(22,8);
 }
 
 void obstacle_right(){
-    copro_setSpeed(10,20);
-    delay(300);
-    copro_setSpeed(20,20);
+    copro_setSpeed(8,22);
 }
 
 void obstacle_ahead(){
-    copro_setSpeed(-20,20);
-    delay(500);
-    copro_setSpeed(20,20);
+    if (copro_distance[DS_FRONT_LEFT] >= copro_distance[DS_FRONT_RIGHT]){
+        copro_stop();
+        delay(500);
+        copro_setSpeed(-20,20);
+    } else if(copro_distance[DS_FRONT_LEFT] < copro_distance[DS_FRONT_RIGHT]){
+        copro_stop();
+        delay(500);
+        copro_setSpeed(20,-20);
+    }
 }

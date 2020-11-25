@@ -54,10 +54,14 @@ int main() {
                 // Justieren und geradeaus fahren
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
+                obstacle_ahead();
+                break;
             case OBSTACLE_LEFT_AHEAD:
                 // Darauf achten, dass er nicht näher kommt
+                obstacle_left();
+                break;
             case OBSTACLE_RIGHT_AHEAD:
-                copro_stop();
+                obstacle_right();
                 break;
             default:
                 // default = nibo is free
