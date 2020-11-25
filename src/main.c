@@ -50,8 +50,9 @@ int main() {
 
         switch (get_current_state()) {
             case DEAD_END:
-                leave_dead_end();
                 // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
+                leave_dead_end();
+                break;
             case ALLEY:
                 // Justieren und geradeaus fahren
                 drive_in_alley();
