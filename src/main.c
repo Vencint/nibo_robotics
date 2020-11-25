@@ -91,8 +91,9 @@ void start_nibo() {
 
     gfx_move(0, 0);
     gfx_set_proportional(1);
-    /* TODO: Display has to be cleared before changing its message to the following (because there's text from the
-             previous message shown on the display after changing to the following one) */
+
+    // Clear text currently shown on the display
+    gfx_fill(0);
     gfx_print_text("Start nibo...");
 }
 
@@ -116,10 +117,13 @@ void init() {
 uint8_t request_distance_data() {
     uint8_t update = copro_update();
     if (!update) {
+        // Clear text currently shown on the display
+        gfx_fill(0);
+
         gfx_move(10, 10);
         gfx_set_proportional(1);
         gfx_print_text("COPRO Error:");
-        gfx_move(0, 10);
+        gfx_move(10, 30);
         gfx_print_text("can't update distance sensor data");
     }
     return update;
