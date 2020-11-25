@@ -85,33 +85,18 @@ int main() {
                 break;
             case ALLEY:
                 // Justieren und geradeaus fahren
-
-                // TODO: Vor merge mit allen anderen entfernen!
-                copro_stop();
                 break;
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
-
-                // TODO: Vor merge mit allen anderen entfernen!
-                copro_stop();
                 break;
             case OBSTACLE_LEFT_AHEAD:
                 // Darauf achten, dass er nicht näher kommt
-
-                // TODO: Vor merge mit allen anderen entfernen!
-                copro_stop();
                 break;
             case OBSTACLE_RIGHT_AHEAD:
                 // Darauf achten, dass er nicht näher kommt
-
-                // TODO: Vor merge mit allen anderen entfernen!
-                copro_stop();
                 break;
             default:
                 // default = nibo is free
-                // TODO: Vor merge mit allen anderen entfernen!
-                copro_stop();
-                // copro_setSpeed(5, 5);
                 break;
         }
 
