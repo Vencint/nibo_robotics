@@ -21,6 +21,7 @@
 #include "jan.h"
 #include "patrick.h"
 #include "utils.h"
+#include "vincent.h"
 
 
 void init();
@@ -53,6 +54,8 @@ int main() {
                 // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
             case ALLEY:
                 // Justieren und geradeaus fahren
+                drive_in_alley();
+                break;
             case OBSTACLE_AHEAD:
                 // Sensor, der besten Wert liefert finden und in diese Richtung fahren
                 obstacle_ahead();
