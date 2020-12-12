@@ -15,6 +15,11 @@
 #define NEAR        (uint16_t) 0x00a0
 
 /**
+ * threshold for obstacles considered to be very near a distance sensor
+ */
+#define VERY_NEAR   (uint16_t) 0x01c0
+
+/**
  * Enum for nibo's current state.
  */
 enum state {
