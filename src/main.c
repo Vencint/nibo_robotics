@@ -1,8 +1,8 @@
 /**
  * @file main.c
- * @author Vincent Luedtke
+ * @author Vincent Luedtke, Patrick Schlesinger, Jan Schorowski
  * @date 30.10.20
- * @brief Program to let the nibo drive until it encounters an obstacle. The nibo will stop in that case.
+ * @brief Main part of the application taking care of initialization and endless while loop.
  */
 
 #include <nibo/niboconfig.h>
@@ -19,18 +19,13 @@
 #include <nibo/leds.h>
 #include <stdio.h>
 
-#include "jan.h"
-#include "patrick.h"
 #include "utils.h"
-#include "vincent.h"
+#include "controller.h"
 
 
 void init();
 
-uint8_t request_distance_data();
-
 void start_nibo();
-
 
 void display_speed();
 
@@ -43,11 +38,11 @@ void light_led_at_location(uint8_t color, int location);
 
 /**
  * Main function to run endless while-loop in.
+ * @author Vincent Luedtke, Patrick Schlesinger, Jan Schorowski
  */
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
 #pragma ide diagnostic ignored "EndlessLoop"
-
 int main() {
     init();
 
@@ -55,7 +50,7 @@ int main() {
 
     while (true) {
         // if update of co-processor failed then restart while loop
-        if (!request_distance_data()) continue;
+        if (not request_distance_data()) continue;
 
         gfx_term_clear();
         display_speed();
@@ -65,27 +60,28 @@ int main() {
         switch (get_current_state()) {
             case DEAD_END:
                 display_state("dead end detected");
-                // Rückwärts heraus fahren, bis rechts oder links frei, danach 180 Grad Drehung
+                // reversing until left or right is free then turn around 180°
                 leave_dead_end();
                 break;
             case ALLEY:
                 display_state("alley detected");
-                // Justieren und geradeaus fahren
+                // adjust and drive straight ahead
                 drive_in_alley();
                 break;
             case OBSTACLE_AHEAD:
                 display_state("obstacle ahead");
-                // Sensor, der besten Wert liefert finden und in diese Richtung fahren
-                obstacle_ahead();
+                // decide for direction with best sensor values
+                avoid_obstacle_ahead();
                 break;
             case OBSTACLE_LEFT_AHEAD:
                 display_state("obstacle left ahead");
-                // Darauf achten, dass er nicht näher kommt
-                obstacle_left();
+                // adjust slightly to the right
+                turn_right();
                 break;
             case OBSTACLE_RIGHT_AHEAD:
                 display_state("obstacle right ahead");
-                obstacle_right();
+                // adjust slightly to the left
+                turn_left();
                 break;
             default:
                 display_state("free");
@@ -99,6 +95,10 @@ int main() {
 }
 #pragma clang diagnostic pop
 
+/**
+ * Function to print the current state on the nibo's display.
+ * @param current_state the current state the nibo is in that will be printed on the display
+ */
 void display_state(char *current_state) {
     char text[25];
     gfx_move(0, 10);
@@ -108,7 +108,7 @@ void display_state(char *current_state) {
 
 
 /**
- * This function shows the current speed (in ticks) of the left and right wheel using the display.
+ * Function to print the current speed (in ticks) of the nibo's left and right wheel on the nibo's display.
  */
 void display_speed() {
     char text[25];
@@ -119,7 +119,7 @@ void display_speed() {
 
 
 /**
- * Function waiting for the user to start the nibo.
+ * Function waiting for the user to start the nibo by pressing S3.
  */
 void start_nibo() {
     gfx_move(0, 0);
@@ -151,25 +151,6 @@ void init() {
 }
 
 /**
- * Function to update co-processor, return the result and print an error message on the display if needed.
- * @return 1 if everything went well; 0 otherwise
- */
-uint8_t request_distance_data() {
-    uint8_t update = copro_update();
-    if (!update) {
-        // Clear text currently shown on the display
-        gfx_fill(0);
-
-        gfx_move(10, 10);
-        gfx_set_proportional(1);
-        gfx_print_text("COPRO Error:");
-        gfx_move(10, 30);
-        gfx_print_text("can't update distance sensor data");
-    }
-    return update;
-}
-
-/**
  * Function to determine if an obstacle is near (LEDs orange), very near (LEDs red) or not near at all (green).
  */
 void distance_detection() {
@@ -188,7 +169,7 @@ void distance_detection() {
 /**
  * Function to turn on an LED at a certain location.
  * @param color the color in which the LED should shine
- * @param location location of a distance sensor for which to turn corresponding LED on
+ * @param location location of a distance sensor for which to turn on corresponding LED
  */
 void light_led_at_location(uint8_t color, int location) {
     switch (location) {

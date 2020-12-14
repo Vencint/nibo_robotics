@@ -1,8 +1,8 @@
 /**
  * @file utils.c
- * @author Vincent Luedtke
+ * @author Vincent Luedtke, Patrick Schlesinger, Jan Schorowski
  * @date 14.11.20
- * @brief explain stuff here
+ * @brief File containing useful functions that are needed by the entired application.
  */
 
 #include <stdint.h>
@@ -12,8 +12,10 @@
 #include <nibo/delay.h>
 #include <nibo/bot.h>
 #include <nibo/copro.h>
+#include <nibo/gfx.h>
 
 #include "utils.h"
+
 
 /**
  * Function to get nibo's current state.
@@ -43,4 +45,23 @@ enum state get_current_state() {
  */
 bool is_near(enum distance_sensors sensor, uint16_t threshold) {
     return copro_distance[sensor] / 128 > threshold;
+}
+
+/**
+ * Function to update co-processor, return the result and print an error message on the display if needed.
+ * @return 1 if everything went well; 0 otherwise
+ */
+uint8_t request_distance_data() {
+    uint8_t update = copro_update();
+    if (!update) {
+        // Clear text currently shown on the display
+        gfx_fill(0);
+
+        gfx_move(10, 10);
+        gfx_set_proportional(1);
+        gfx_print_text("COPRO Error:");
+        gfx_move(10, 30);
+        gfx_print_text("can't update distance sensor data");
+    }
+    return update;
 }

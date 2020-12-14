@@ -1,7 +1,9 @@
-//
-// Created by Vincent Lüdtke on 14.11.20.
-//
-
+/**
+ * @file utils.h
+ * @author Vincent Luedtke, Patrick Schlesinger, Jan Schorowski
+ * @date 14.11.20
+ * @brief File containing useful functions that are needed by the entired application.
+ */
 
 #ifndef NIBO_UTILS_H
 #define NIBO_UTILS_H
@@ -57,5 +59,7 @@ enum leds {
 enum state get_current_state();
 
 bool is_near(enum distance_sensors sensor, uint16_t threshold);
+
+uint8_t request_distance_data();
 
 #endif //NIBO_UTILS_H
