@@ -93,8 +93,7 @@ int main() {
                 copro_setSpeed(20, 20);
                 break;
         }
-
-        delay(500);
+        delay(50);
     }
     return 0;
 }

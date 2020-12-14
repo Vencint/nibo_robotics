@@ -52,7 +52,7 @@ void obstacle_ahead(){
         copro_stop();
         delay(500);
         copro_setSpeed(20,-20);
-    } else if(copro_distance[DS_FRONT_LEFT] < copro_distance[DS_FRONT_RIGHT]){
+    } else {
         copro_stop();
         delay(500);
         copro_setSpeed(-20,20);
