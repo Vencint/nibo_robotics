@@ -39,24 +39,28 @@
 #include "utils.h"
 
 
-void obstacle_left(){
-    copro_setSpeed(22,8);
+void obstacle_left() {
+    copro_setSpeed(22, 8);
 }
 
-void obstacle_right(){
-    copro_setSpeed(8,22);
+void obstacle_right() {
+    copro_setSpeed(8, 22);
 }
 
-void obstacle_ahead(){
-    if (copro_distance[DS_FRONT_LEFT] >= copro_distance[DS_FRONT_RIGHT]){
-        copro_stop();
-        delay(100);
-        copro_setSpeed(20, -20);
-        delay(950);
+void obstacle_ahead() {
+    if (copro_distance[DS_FRONT_LEFT] >= copro_distance[DS_FRONT_RIGHT]) {
+        while (copro_distance[DS_FRONT] > NEAR) {
+            copro_stop();
+            delay(100);
+            copro_setSpeed(20, -20);
+            delay(950);
+        }
     } else {
-        copro_stop();
-        delay(100);
-        copro_setSpeed(-20, 20);
-        delay(950);
+        while (copro_distance[DS_FRONT] > NEAR) {
+            copro_stop();
+            delay(100);
+            copro_setSpeed(-20, 20);
+            delay(950);
+        }
     }
 }
