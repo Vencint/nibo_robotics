@@ -51,10 +51,10 @@ void obstacle_ahead(){
     if (copro_distance[DS_FRONT_LEFT] >= copro_distance[DS_FRONT_RIGHT]){
         copro_stop();
         delay(500);
-        copro_setSpeed(-20,20);
+        copro_setSpeed(20,-20);
     } else if(copro_distance[DS_FRONT_LEFT] < copro_distance[DS_FRONT_RIGHT]){
         copro_stop();
         delay(500);
-        copro_setSpeed(20,-20);
+        copro_setSpeed(-20,20);
     }
 }
