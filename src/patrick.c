@@ -53,7 +53,7 @@ void obstacle_ahead() {
             copro_stop();
             delay(100);
             copro_setSpeed(20, -20);
-            delay(950);
+            delay(500);
             copro_update();
         }
     } else {
@@ -61,7 +61,7 @@ void obstacle_ahead() {
             copro_stop();
             delay(100);
             copro_setSpeed(-20, 20);
-            delay(950);
+            delay(500);
             copro_update();
         }
     }
