@@ -49,18 +49,20 @@ void obstacle_right() {
 
 void obstacle_ahead() {
     if (copro_distance[DS_FRONT_LEFT] >= copro_distance[DS_FRONT_RIGHT]) {
-        while (copro_distance[DS_FRONT] > NEAR) {
+        while (is_near(copro_distance[DS_FRONT], NEAR)) {
             copro_stop();
             delay(100);
             copro_setSpeed(20, -20);
             delay(950);
+            copro_update();
         }
     } else {
-        while (copro_distance[DS_FRONT] > NEAR) {
+        while (is_near(copro_distance[DS_FRONT], NEAR)) {
             copro_stop();
             delay(100);
             copro_setSpeed(-20, 20);
             delay(950);
+            copro_update();
         }
     }
 }
