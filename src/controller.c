@@ -138,7 +138,7 @@ int leave_dead_end() {
 
         // finally set the speed and have a delay to not overwhelm the motor with commands
         copro_setSpeed(speed_left_wheel, speed_right_wheel);
-        delay(500);
+        delay(50);
     }
 
     return 0;
