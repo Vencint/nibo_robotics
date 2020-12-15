@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "utils.h"
+#include "controller.h"
 
 
 /**
@@ -32,13 +33,13 @@
 void leave_dead_end() {
     // turn on the spot
     copro_setSpeed(20, -30);
-    delay(1000);
+    delay(800);
 
     while (true) {
         copro_update();
 
         // if there's an obstacle ahead...
-        if ((copro_distance[DS_FRONT] / 256) < 50) {
+        if (is_near(DS_FRONT, NEAR)) {
             // yes: slowly turn further
             copro_setSpeed(10, -10);
         } else {
