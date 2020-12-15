@@ -52,7 +52,6 @@ int leave_dead_end() {
     while (true) {
         // update distance sensor data
         copro_update();
-        display
         for (int i = 0; i < 5; ++i) {
             ds_current[i] = copro_distance[i] / 256;
         }
@@ -76,9 +75,9 @@ int leave_dead_end() {
             difference = ds_current[DS_LEFT] - ds_previous[DS_LEFT];
             if (difference > 1) {
                 if (difference < 5) {
-                    speed_right_wheel = -8; // -9
+                    speed_right_wheel = -9; // -9
                 } else if (difference < 10) {
-                    speed_right_wheel = -6; // -8
+                    speed_right_wheel = -8; // -8
                 } else if (difference < 15) {
                     speed_right_wheel = -7;
                 } else if (difference < 20) {
@@ -104,9 +103,9 @@ int leave_dead_end() {
             difference = ds_current[DS_RIGHT] - ds_previous[DS_RIGHT];
             if (difference > 1) {
                 if (difference < 5) {
-                    speed_left_wheel = -8; // -9
+                    speed_left_wheel = -9; // -9
                 } else if (difference < 10) {
-                    speed_left_wheel = -6; // -8
+                    speed_left_wheel = -8; // -8
                 } else if (difference < 15) {
                     speed_left_wheel = -7;
                 } else if (difference < 20) {
@@ -139,7 +138,7 @@ int leave_dead_end() {
 
         // finally set the speed and have a delay to not overwhelm the motor with commands
         copro_setSpeed(speed_left_wheel, speed_right_wheel);
-        delay(50);
+        delay(200);
     }
 
     return 0;
