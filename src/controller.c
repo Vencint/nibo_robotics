@@ -52,6 +52,7 @@ int leave_dead_end() {
     while (true) {
         // update distance sensor data
         copro_update();
+        display
         for (int i = 0; i < 5; ++i) {
             ds_current[i] = copro_distance[i] / 256;
         }
@@ -72,19 +73,19 @@ int leave_dead_end() {
         // compare current distance sensor values to the values of the previous loop
         if (ds_current[DS_LEFT] > ds_previous[DS_LEFT]) {
             // Nibo is reversing to the left, steer to the right
-            difference = ds_current - ds_previous;
+            difference = ds_current[DS_LEFT] - ds_previous[DS_LEFT];
             if (difference > 1) {
                 if (difference < 5) {
                     speed_right_wheel = -8; // -9
                 } else if (difference < 10) {
                     speed_right_wheel = -6; // -8
-                } /*else if (difference < 15) {
+                } else if (difference < 15) {
                     speed_right_wheel = -7;
                 } else if (difference < 20) {
                     speed_right_wheel = -5;
                 } else {
                     speed_right_wheel = -3;
-                }*/
+                }
             } else {
                 // reverse in a straight line
                 speed_right_wheel = -10;
@@ -92,27 +93,27 @@ int leave_dead_end() {
 
             /* if the front-left side of the nibo is very close to an object, turn with lesser radius by reversing with
              * the left wheel more quickly */
-            /*if (ds_current[DS_RIGHT] > 230) {
+            if (ds_current[DS_RIGHT] > 230) {
                 speed_left_wheel = -12;
             } else {
                 speed_left_wheel = -10;
-            }*/
+            }
         } else if (ds_current[DS_RIGHT] > ds_previous[DS_RIGHT]) {
             // Nibo is reversing to the right, steer to the left
 
-            difference = ds_current - ds_previous;
+            difference = ds_current[DS_RIGHT] - ds_previous[DS_RIGHT];
             if (difference > 1) {
                 if (difference < 5) {
                     speed_left_wheel = -8; // -9
                 } else if (difference < 10) {
-                    speed_left_wheel = -8; // -8
-                } /*else if (difference < 15) {
+                    speed_left_wheel = -6; // -8
+                } else if (difference < 15) {
                     speed_left_wheel = -7;
                 } else if (difference < 20) {
                     speed_left_wheel = -5;
                 } else {
                     speed_left_wheel = -3;
-                }*/
+                }
             } else {
                 // reverse in a straight line
                 speed_left_wheel = -10;
@@ -120,11 +121,11 @@ int leave_dead_end() {
 
             /* if the front-right side of the nibo is very close to an object, turn with lesser radius by reversing with
              * the right wheel more quickly */
-            /*if (ds_current[DS_RIGHT] > 230) {
+            if (ds_current[DS_RIGHT] > 230) {
                 speed_right_wheel = -12;
             } else {
                 speed_right_wheel = -10;
-            }*/
+            }
         } else {
             // reverse in a straight line
             speed_left_wheel = -10;
