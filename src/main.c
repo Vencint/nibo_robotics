@@ -60,7 +60,7 @@ int main() {
         switch (get_current_state()) {
             case DEAD_END:
                 display_state("dead end detected");
-                // reversing until left or right is free then turn around 180°
+                // turn around on the spot, then enter the function "drive_in_alley"
                 leave_dead_end();
                 break;
             case ALLEY:

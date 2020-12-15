@@ -8,7 +8,7 @@
 #ifndef NIBO2_CONTROLLER_H
 #define NIBO2_CONTROLLER_H
 
-int leave_dead_end();
+void leave_dead_end();
 
 void drive_in_alley();
 
