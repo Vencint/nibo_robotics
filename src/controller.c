@@ -31,7 +31,7 @@
  */
 void leave_dead_end() {
     // turn on the spot
-    copro_setSpeed(20, -20);
+    copro_setSpeed(20, -30);
     delay(1000);
 
     while (true) {
@@ -46,6 +46,7 @@ void leave_dead_end() {
             copro_stop();
             break;
         }
+        delay(1000);
     }
 }
 
