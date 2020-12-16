@@ -3,6 +3,11 @@
  * @author Vincent Luedtke, Patrick Schlesinger, Jan Schorowski
  * @date 30.10.20
  * @brief Main part of the application taking care of initialization and endless while loop.
+ *
+ * * **Eingebettete Systeme und Robotik I** <br>
+ * Nibo2 - Roboter - Projekt                <br>
+ * Team 4 - Pflichtteil                     <br>
+ * *Software für den Nibo2 Roboter*         <br>
  */
 
 #include <nibo/niboconfig.h>
